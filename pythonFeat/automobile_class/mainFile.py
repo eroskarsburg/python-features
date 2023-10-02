@@ -1,48 +1,45 @@
 class Montadora:
-    def __init__(self, codigoMontadora=0, estado=None, razaoSocial=None):
-        self.CodigoMontadora = codigoMontadora
+    def __init__(self, codigo_montadora=None, estado=None, razao_social=None):
+        self.CodigoMontadora = codigo_montadora
         self.Estado = estado
-        self.RazaoSocial = razaoSocial
+        self.RazaoSocial = razao_social
 
     def __str__(self):
         return f"-> Montadora:\nCódigo: {self.CodigoMontadora},\nEstado: {self.Estado},\nRazão Social: {self.RazaoSocial}"
 
 
 class Modelo:
-    def __init__(self, codigoModelo=0, nomeModelo=None, montadora=None):
-        self.CodigoModelo = codigoModelo
-        self.NomeModelo = nomeModelo
+    def __init__(self, codigo_modelo=None, nome_modelo=None, montadora=None):
+        self.CodigoModelo = codigo_modelo
+        self.NomeModelo = nome_modelo
         self.Montadora = montadora
 
     def __str__(self):
         if self.Montadora is not None:
-            return f"-> Modelo:\nCódigo: {self.CodigoModelo},\nNome: {self.NomeModelo},\nCódigo Montadora: {self.Montadora.CodigoMontadora},\nRazão Social Montadora: {self.Montadora.RazaoSocial},\nEstado Montadora: {self.Montadora.Estado}"
+            return f"-> Modelo:\nCódigo: {self.CodigoModelo},\nNome: {self.NomeModelo}," \
+                   f"\n    Código Montadora: {self.Montadora.CodigoMontadora}," \
+                   f"\n    Razão Social Montadora: {self.Montadora.RazaoSocial}," \
+                   f"\n    Estado Montadora: {self.Montadora.Estado}"
         else:
-            return f"-> Modelo:\nCódigo: {self.CodigoModelo},\nNome: {self.NomeModelo},\nMontadora: None"
+            return f"-> Modelo:\nCódigo: {self.CodigoModelo},\nNome: {self.NomeModelo},\n    Montadora: None"
 
 
 class Carro:
-    def __init__(self, placa=None, modelo=None, anoFabricacao=0):
+    def __init__(self, placa=None, modelo=None, ano_fabricacao=None):
         self.Placa = placa
         self.Modelo = modelo
-        self.AnoFabricacao = anoFabricacao
+        self.AnoFabricacao = ano_fabricacao
 
     def __str__(self):
-        if self.Modelo is not None and self.Modelo.Montadora is not None:
-            return f"-> Carro:\nPlaca: {self.Placa},\nCódigo Modelo: {self.Modelo.CodigoModelo},\nNome Modelo: {self.Modelo.NomeModelo},\nCódigo Montadora: {self.Modelo.Montadora.CodigoMontadora},\nRazão Social Montadora: {self.Modelo.Montadora.RazaoSocial},\nEstado Montadora: {self.Modelo.Montadora.Estado},\nAno fabricação: {self.AnoFabricacao}"
-        else:
-            return f"-> Carro:\nPlaca: {self.Placa},\nModelo: None,\nAno fabricação: {self.AnoFabricacao}"
+        return f"-> Carro:\nPlaca: {self.Placa},\n    Código Modelo: {self.Modelo.CodigoModelo}," \
+               f"\n    Nome Modelo: {self.Modelo.NomeModelo}," \
+               f"\n        Código Montadora: {self.Modelo.Montadora.CodigoMontadora}," \
+               f"\n        Razão Social Montadora: {self.Modelo.Montadora.RazaoSocial}," \
+               f"\n        Estado Montadora: {self.Modelo.Montadora.Estado}," \
+               f"\nAno fabricação: {self.AnoFabricacao}"
 
 
 class Menus:
-    def MenuBooksAndEditor(self):
-        print("#### Menu ####")
-        print("1. Cadastrar Editora: ")
-        print("2. Cadastrar Livro: ")
-        print("3. Pesquisar Editora: ")
-        print("4. Pesquisar Livro: ")
-        print("5. Sair: ")
-
     def MenuAutomovel(self):
         print("#### Menu ####")
         print("1. Cadastrar Automóvel: ")
@@ -87,7 +84,7 @@ class Menus:
         print("2. Ano de fabricação")
 
 
-class Automovel:
+class AutomovelRepository:
     def __init__(self):
         self.listaMontadora = []
         self.listaModelo = []
@@ -95,25 +92,22 @@ class Automovel:
 
     def MostrarAtributosAutomovel(self):
         for montadora in self.listaMontadora:
-            print("\n", montadora)
-
+            print("\n" + str(montadora))
         for modelo in self.listaModelo:
-            print("\n", modelo)
-
+            print("\n" + str(modelo))
         for carro in self.listaCarro:
-            print("\n", carro, "\n")
+            print("\n" + str(carro) + "\n")
 
     def CadastrarMontadora(self):
         try:
             print("### Montadora ###")
-            print("-> Codigo:")
-            montadora = Montadora()
-            montadora.CodigoMontadora = int(input())  # Use input() in Python
-            print("-> Razão Social:")
-            montadora.RazaoSocial = input()  # Use input() in Python
-            print("-> Estado:")
-            montadora.Estado = input()  # Use input() in Python
+            codigo_montadora = int(input("-> Codigo: "))
+            razao_social = input("-> Razão Social: ")
+            estado = input("-> Estado: ")
+            
+            montadora = Montadora(codigo_montadora, estado, razao_social)
             self.listaMontadora.append(montadora)
+            
             print("\nCadastro finalizado!\n")
         except Exception as ex:
             print(f"Ocorreu um erro.\nErro: {ex}")
@@ -123,21 +117,19 @@ class Automovel:
             if not self.listaMontadora:
                 print("\nNão há nenhuma montadora cadastrada para fazer vínculo a este modelo.\n")
                 return
-
+            
             print("### Modelo ###")
-            print("-> Codigo:")
-            modelo = Modelo()
-            modelo.CodigoModelo = int(input())  # Use input() in Python
-            print("-> Nome do Modelo:")
-            modelo.NomeModelo = input()  # Use input() in Python
-            print("-> Código da Montadora:")
-            codigoMontadora = int(input())  # Use input() in Python
-
-            if not self.VerificarMontadoraExistente(codigoMontadora):
+            codigo_modelo = int(input("-> Codigo: "))
+            nome_modelo = input("-> Nome do Modelo: ")
+            codigo_montadora = int(input("-> Código da Montadora: "))
+            
+            if not self.VerificarMontadoraExistente(codigo_montadora):
                 print("Não há Montadora cadastrada com esse código.")
                 return
-
+            
+            modelo = Modelo(codigo_modelo, nome_modelo, self.listaMontadora[-1])
             self.listaModelo.append(modelo)
+            
             print("\nCadastro finalizado!\n")
         except Exception as ex:
             print(f"Ocorreu um erro.\nErro: {ex}")
@@ -147,54 +139,46 @@ class Automovel:
             if not self.listaModelo:
                 print("\nNão há nenhum modelo cadastrado para fazer vínculo a este carro.\n")
                 return
-
+            
             print("### Carro ###")
-            print("-> Placa:")
-            carro = Carro()
-            carro.Placa = input()  # Use input() in Python
-            print("-> Ano de fabricação:")
-            carro.AnoFabricacao = int(input())  # Use input() in Python
-            print("-> Código do Modelo:")
-            codigoModelo = int(input())  # Use input() in Python
-
-            if not self.VerificarModeloExistente(codigoModelo):
+            placa = input("-> Placa: ")
+            ano_fabricacao = int(input("-> Ano de fabricação: "))
+            codigo_modelo = int(input("-> Código do Modelo: "))
+            
+            if not self.VerificarModeloExistente(codigo_modelo):
                 print("Não há Modelo cadastrado com esse código.")
                 return
-
+            
+            carro = Carro(placa, self.listaModelo[-1], ano_fabricacao)
             self.listaCarro.append(carro)
+            
             print("\nCadastro finalizado!\n")
         except Exception as ex:
             print(f"Ocorreu um erro.\nErro: {ex}")
 
-    def VerificarMontadoraExistente(self, codigoMontadora):
+    def VerificarMontadoraExistente(self, codigo_montadora):
         for montadora in self.listaMontadora:
-            if montadora.CodigoMontadora == codigoMontadora:
-                modelo = Modelo()
-                modelo.Montadora = montadora
-                self.listaModelo.append(modelo)
+            if montadora.CodigoMontadora == codigo_montadora:
                 return True
         return False
 
-    def VerificarModeloExistente(self, codigoModelo):
+    def VerificarModeloExistente(self, codigo_modelo):
         for modelo in self.listaModelo:
-            if modelo.CodigoModelo == codigoModelo:
-                carro = Carro()
-                carro.Modelo = modelo
-                self.listaCarro.append(carro)
+            if modelo.CodigoModelo == codigo_modelo:
                 return True
         return False
 
-    def BuscarMontadora(self, codigoMont):
+    def BuscarMontadora(self, codigo_mont):
         for montadora in self.listaMontadora:
-            if montadora.CodigoMontadora == codigoMont:
+            if montadora.CodigoMontadora == codigo_mont:
                 print("\nMontadora a ser atualizada: ")
                 print(montadora)
                 return True
         return False
 
-    def BuscarModelo(self, codigoModelo):
+    def BuscarModelo(self, codigo_modelo):
         for modelo in self.listaModelo:
-            if modelo.CodigoModelo == codigoModelo:
+            if modelo.CodigoModelo == codigo_modelo:
                 print("\nModelo a ser atualizado: ")
                 print(modelo)
                 return True
@@ -208,58 +192,58 @@ class Automovel:
                 return True
         return False
 
-    def AtualizarMontadoraCodigo(self, codigo, novoCodigo):
+    def AtualizarMontadoraCodigo(self, codigo, novo_codigo):
         for montadora in self.listaMontadora:
             if montadora.CodigoMontadora == codigo:
-                montadora.CodigoMontadora = novoCodigo
+                montadora.CodigoMontadora = novo_codigo
                 print("\nMontadora Atualizada!\n")
                 return
 
-    def AtualizarMontadoraEstado(self, codigo, novoEstado):
+    def AtualizarMontadoraEstado(self, codigo, novo_estado):
         for montadora in self.listaMontadora:
             if montadora.CodigoMontadora == codigo:
-                montadora.Estado = novoEstado
+                montadora.Estado = novo_estado
                 print("\nMontadora Atualizada!\n")
                 return
 
-    def AtualizarMontadoraRazaoSocial(self, codigo, novaRazaoSocial):
+    def AtualizarMontadoraRazaoSocial(self, codigo, nova_razao_social):
         for montadora in self.listaMontadora:
             if montadora.CodigoMontadora == codigo:
-                montadora.RazaoSocial = novaRazaoSocial
+                montadora.RazaoSocial = nova_razao_social
                 print("\nMontadora Atualizada!\n")
                 return
 
-    def AtualizarModeloCodigo(self, codigo, novoCodigo):
+    def AtualizarModeloCodigo(self, codigo, novo_codigo):
         for modelo in self.listaModelo:
             if modelo.CodigoModelo == codigo:
-                modelo.CodigoModelo = novoCodigo
+                modelo.CodigoModelo = novo_codigo
                 print("\nModelo Atualizado!\n")
                 return
 
-    def AtualizarModeloNome(self, codigo, novoNome):
+    def AtualizarModeloNome(self, codigo, novo_nome):
         for modelo in self.listaModelo:
             if modelo.CodigoModelo == codigo:
-                modelo.NomeModelo = novoNome
+                modelo.NomeModelo = novo_nome
                 print("\nModelo Atualizado!\n")
                 return
 
-    def AtualizarCarroPlaca(self, placa, novaPlaca):
+    def AtualizarCarroPlaca(self, placa, nova_placa):
         for carro in self.listaCarro:
             if carro.Placa == placa:
-                carro.Placa = novaPlaca
+                carro.Placa = nova_placa
                 print("\nCarro Atualizado!\n")
                 return
 
-    def AtualizarCarroAnoFabricacao(self, placa, novoAnoFabricacao):
+    def AtualizarCarroAnoFabricacao(self, placa, novo_ano_fabricacao):
         for carro in self.listaCarro:
             if carro.Placa == placa:
-                carro.AnoFabricacao = novoAnoFabricacao
+                carro.AnoFabricacao = novo_ano_fabricacao
                 print("\nCarro Atualizado!\n")
                 return
 
 
 # Create an instance of Automovel class
-automovel = Automovel()
+automovel = AutomovelRepository()
 menu = Menus()
 opt = 0
 
